@@ -6,6 +6,7 @@ const TaskCard = ({ item }) => {
   const [editedTask, setEditedTask] = useState(item);
   const { updateTask, deleteTask } = useTaskModel();
   const [isEditing, setIsEditing] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   const handleEditChange = (e) => {
     setEditedTask(e.target.value);
@@ -16,8 +17,16 @@ const TaskCard = ({ item }) => {
     setIsEditing(!isEditing);
   };
 
+  const handleMarkAsDone = () => {
+    setIsCompleted(!isCompleted);
+  };
+
   return (
-    <li className="py-5 flex items-start justify-between">
+    <li
+      className={`py-5 flex items-start justify-between ${
+        isCompleted ? "line-through text-gray-400" : ""
+      }`}
+    >
       <div className="flex gap-3">
         {isEditing ? (
           <input
@@ -43,12 +52,20 @@ const TaskCard = ({ item }) => {
             Save
           </button>
         ) : (
-          <button
-            onClick={() => deleteTask(item)}
-            className="px-3 py-1 text-sm text-white bg-red-600 rounded-lg hover:bg-indigo-500 active:bg-indigo-700"
-          >
-            Delete
-          </button>
+          <>
+            <button
+              onClick={handleMarkAsDone}
+              className="px-3 py-1 text-sm text-gray-700 border rounded-lg hover:bg-gray-100"
+            >
+              {isCompleted ? "Undo" : "Done"}
+            </button>
+            <button
+              onClick={() => deleteTask(item)}
+              className="px-3 py-1 text-sm text-white bg-red-600 rounded-lg hover:bg-indigo-500 active:bg-indigo-700"
+            >
+              Delete
+            </button>
+          </>
         )}
         <button
           onClick={() => setIsEditing(!isEditing)} // Toggle editing state
